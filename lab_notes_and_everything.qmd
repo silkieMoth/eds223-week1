@@ -1,0 +1,108 @@
+---
+title: "eds 223: week 1 lab"
+format: html
+editor_options:
+  chunk_output_type: console
+---
+
+```{r}
+# run this all in console to get packages if u dont already have them
+#install.packages("sf")
+#install.packages("stars")
+#install.packages("tmap")
+#install.packages("here")
+```
+
+```{r}
+library(sf)
+library(stars)
+library(tmap)
+library(here)
+```
+
+```{r}
+# raster of global elevation
+world_elevation <- read_stars(here("data", "worldelevation.tif"))
+
+# country boundaries
+world_vector <- read_sf(here("data", "worldvector.gpkg"))
+
+# major cities
+world_cities <- read_sf(here("data", "worldcities.gpkg"))
+
+```
+
+
+```{r}
+# the first object defines the extent of the map
+# except if we define is.master
+# other ways to change extent include bbox (bbox = c(-15, 35, 45, 65) OR bbox = world cities)
+
+# see all basic tm functions table on lab 1 page
+
+
+tm_shape(world_elevation) +
+  tm_raster() +
+tm_shape(world_vector) + 
+  tm_borders() + 
+tm_shape(world_cities, is.master = TRUE) + 
+  tm_dots(size = 0.5)
+```
+
+```{r}
+# lwd = line width
+# lty = line type
+
+tm_shape(world_vector) + 
+  tm_polygons(col = "lightblue",
+              border.col = "black",
+              lwd = 0.5,
+              lty = "dashed")
+```
+
+
+```{r}
+tm_shape(world_vector) + 
+  tm_borders(col = "red")
+
+
+```
+
+```{r}
+tm_shape(world_vector) + 
+  tm_fill(col = "lightblue")
+```
+
+```{r}
+# map of c02 emmisions
+
+tm_shape(world_vector) + 
+  tm_fill("CO2_emissions")
+```
+
+```{r}
+# whatever this is
+tm_shape(world_cities) +
+  tm_symbols()
+
+tm_shape(world_cities) +
+  tm_bubbles()
+
+tm_shape(world_cities) +
+  tm_squares()
+```
+
+```{r}
+# color is the best way to communicate quantitative info
+
+tm_shape(world_vector) + 
+  tm_polygons("life_expectancy",
+              palette = c("yellow", "darkgreen"),
+              title = "life expectancy (years)")
+```
+
+```{r}
+# install.packages("viridisLite")
+
+```
+
