@@ -102,7 +102,82 @@ tm_shape(world_vector) +
 ```
 
 ```{r}
+# viridislite is a coloring engine
 # install.packages("viridisLite")
+library(viridisLite)
 
+tm_shape(world_vector) + 
+  tm_polygons("life_expectancy",
+              palette = viridis(option = "plasma", 8),
+              title = "life expectancy (years)")
+```
+
+```{r}
+tm_shape(world_vector) + 
+  tm_polygons() + 
+  tm_shape(world_cities) +
+  tm_symbols(size = "pop2020",
+             legend.size.is.portrait = TRUE)
+
+
+```
+
+```{r}
+tm_shape(world_vector) + 
+  tm_fill() + 
+  tm_grid()
+
+#or
+
+tm_shape(world_vector) + 
+  tm_fill() + 
+  tm_graticules()
+
+# graticules before fill
+
+tm_shape(world_vector) + 
+  tm_graticules() + 
+  tm_fill()
+
+```
+
+```{r}
+tm_shape(world_vector) + 
+  tm_fill() +
+  tm_scale_bar() +
+  tm_compass(position = c("left", "top"))
+```
+
+```{r}
+#how to make an interactive map
+
+#like this
+tmap_mode("view")
+
+#actually making the map
+
+tm_shape(world_vector) +
+  tm_fill(col = "wb_income_region",
+          palette = viridisLite::plasma(5),
+          title = "Regional income") +
+  tm_layout(bg.color = "grey95",
+            main.title = "global income by country",
+            frame = FALSE)
+```
+
+```{r}
+# saving off a static plot
+
+tmap_mode("plot")
+
+map1 <- tm_shape(world_vector) +
+  tm_fill(col = "wb_income_region",
+          palette = viridisLite::plasma(5),
+          title = "Regional income") +
+  tm_layout(bg.color = "grey95",
+            main.title = "global income by country",
+            frame = FALSE)
+
+tmap_save(map1, here("tmap_ex.png"))
 ```
 
