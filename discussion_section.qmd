@@ -1,0 +1,52 @@
+---
+title: "discussion_section"
+format: html
+editor_options: 
+  chunk_output_type: console
+---
+
+### load in libraries and data
+
+```{r}
+library(here)
+library(tidyverse)
+library(stars)
+library(sf)
+library(tmap)
+
+ei_points <- sf::read_sf(here::here("data", "easter_island", "ei_points.gpkg"))
+volcanoes <- subset(ei_points, type == "volcano")
+ei_elev <- stars::read_stars(here::here("data", "easter_island", "ei_elev.tif"))
+ei_borders <- sf::read_sf(here::here("data", "easter_island", "ei_border.gpkg"))
+ei_roads <- sf::read_sf(here::here("data", "easter_island", "ei_roads.gpkg"))
+```
+
+### tasks
+
+1. Create a map of Easter Island
+2. Create a map of Easter Island and…
+  - denote the island’s borders and continuous elevation
+  - denote the island’s volcanoes and roads
+  - play with the color palette and essential map elements
+
+3. Create an interactive map of Easter Island
+
+```{r}
+volcanoes <- volcanoes %>% dplyr::mutate(cool = volcanoes$elevation / (10 - volcanoes$sv))
+
+tmap_mode("plot")
+
+tm_shape(ei_borders, is.master = TRUE, legend.is.portrait = TRUE) +
+  tm_borders() +
+  tm_graticules() +
+  tm_basemap("OpenStreetMap") +
+  tm_minimap() +
+  tm_scale_bar(breaks = c(0, 5, 10), text.size = 1) +
+tm_shape(ei_elev) +
+  tm_raster(palette = blues9) +
+tm_shape(ei_roads) +
+  tm_lines(lwd = "strokelwd", scale = 4) +
+tm_shape(volcanoes) +
+  tm_dots(size = 0.1)
+```
+
